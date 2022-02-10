@@ -2,6 +2,7 @@
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
   "python.linting.enabled": true,
+  "python.linting.flake8Args": ["--exclude", "./litreview/settings.py"],
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": ["-l 80"]
 }
