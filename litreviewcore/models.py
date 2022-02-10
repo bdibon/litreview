@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.conf import settings
 from django.db import models
 
 
@@ -29,16 +28,29 @@ class Review(models.Model):
 
 
 class UserFollows(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="following",
+        verbose_name="utilisateur",
+    )
     followed_user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="followed_by"
+        User,
+        on_delete=models.CASCADE,
+        related_name="followed_by",
+        verbose_name="utilisateur suivi",
     )
 
     class Meta:
+        verbose_name_plural = "utilisateur suit"
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
         constraints = [
             models.UniqueConstraint(
                 "user", "followed_user", name="unique_user_followed_user"
-            )
+            ),
+            models.CheckConstraint(
+                check=~models.Q(user__exact=models.F("followed_user")),
+                name="user_not_followed_user",
+            ),
         ]
