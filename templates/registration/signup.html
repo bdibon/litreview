@@ -4,11 +4,11 @@
 
 <div class="container d-flex flex-column align-items-center">
   <div class="row mt-5 mb-3">
-    <h1 class="h2 text-center">Inscrivez-vous</h1>
+    <h2 class="text-center">Inscrivez-vous</h2>
   </div>
-  <form class="row w-75" method="POST">
+  <form class="row w-75 flex-column align-items-center" method="POST" action="{% url 'core:signup' %}">
     {% csrf_token %}
-    <div class="col-12 mb-3">
+    <div class="col-12 col-md-8 mb-3">
       <input
         type="text"
         class="form-control {% if form.username.errors %} is-invalid {% endif %}"
@@ -28,7 +28,7 @@
         {{ form.username.help_text }}
       </div>
     </div>
-    <div class="col-12 mb-3">
+    <div class="col-12 col-md-8 mb-3">
       <input
         type="password"
         class="form-control {% if form.password1.errors %} is-invalid {% endif %}"
@@ -44,7 +44,7 @@
         {% endfor %}
       </div>
     </div>
-    <div class="col-12 mb-3">
+    <div class="col-12 col-md-8 mb-3">
       <input
         type="password"
         class="form-control {% if form.password2.errors %} is-invalid {% endif %}"
@@ -60,14 +60,14 @@
           {% endfor %}
       </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 col-md-8">
       <div
         class="row flex-column align-items-center flex-md-row justify-content-md-end"
       >
-        <div class="col-12 px-2 col-md-3">
+        <div class="col-12 px-2 col-md-4">
           <a class="btn btn-primary w-100" href="{% url 'core:home' %}">Retourner</a>
         </div>
-        <div class="col-12 px-2 col-md-3">
+        <div class="col-12 px-2 col-md-4">
           <button type="submit" class="btn btn-primary w-100 my-1 my-md-0">
             S'inscrire
           </button>

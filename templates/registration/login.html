@@ -1,31 +1,57 @@
-{% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+{% extends "base.html" %}
 
-{% if next %}
-    {% if user.is_authenticated %}
-        <p>Your account doesn't have access to this page. To proceed,
-        please login with an account that has access.</p>
-    {% else %}
-        <p>Please login to see this page.</p>
-    {% endif %}
-{% endif %}
+{% block content %}
 
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <table>
-        <tr>
-            <td>{{ form.username.label_tag }}</td>
-            <td>{{ form.username }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.password.label_tag }}</td>
-            <td>{{ form.password }}</td>
-        </tr>
-    </table>
-    <input type="submit" value="login" />
-    <input type="hidden" name="next" value="{{ next }}" />
-</form>
+<div class="container">
+    <div class="row mt-5">
+      <div class="col-md-6 d-flex flex-column align-items-center">
+        <h2 class="mb-4">Inscrivez-vous maintenant</h2>
+        <a href="{% url 'core:signup' %}" class="btn btn-primary px-4">S'inscrire</a>
+      </div>
+      <div class="col-md-6">
+          <div class="container">
+              <div class="row">
+                  <h2 class="text-center">Connectez-vous</h2>
+              </div>
+              <form action="{% url 'login' %}" class="row" method="POST">
+                  {% csrf_token %}
+                  {% if form.non_field_errors %}
+                      <div class="col-12 text-danger">
+                          {% for error in form.non_field_errors %}
+                              <p>{{ error }}</p>
+                          {% endfor %}
+                      </div>
+                  {% endif %}
+                  <div class="col-12 mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="{{ form.username.html_name }}"
+                        placeholder="{{ form.username.label }}"
+                        aria-label="{{ form.username.label }}"
+                        {% if form.username.value %} value="{{ form.username.value }}" {% endif %}
+                        required
+                      />
+                  </div>
+                  <div class="col-12 mb-3">
+                      <input
+                        type="password"
+                        class="form-control"
+                        name="{{ form.password.html_name }}"
+                        placeholder="{{ form.password.label }}"
+                        aria-label="{{ form.password.label }}"
+                        required
+                      />
+                  </div>
+                  <div class="col-12">
+                      <button type="submit" class="btn btn-primary w-100 my-1 my-md-0">
+                          Se connecter
+                      </button>
+                  </div>
+              </form>
+          </div>
+      </div>
+    </div>
+  </div>
 
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+{% endblock %}

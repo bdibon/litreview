@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 from .models import User
 
@@ -13,3 +13,7 @@ class UserCreationForm(UserCreationForm):
             c'est celui sous lequel les autres utilisateurs vous verront.
             """
         }
+
+
+class AuthenticationForm(AuthenticationForm):
+    pass
