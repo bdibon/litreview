@@ -14,19 +14,11 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid justify-content-center">
-          <a class="navbar-brand" href="{% url 'core:home' %}">
-            {% load static %}
-            <img
-              src="{% static 'litreviewcore/brand_logo.png' %}"
-              alt="LITReview logo"
-              width="40px"
-            />
-            <h1 class="h3 d-inline align-middle">LITReview</h1>
-          </a>
-        </div>
-      </nav>
+      {% if user.is_authenticated %}
+        {% include "navbar_logged_in.html" %}
+      {% else %}
+        {% include "navbar_logged_out.html" %}
+      {% endif %}
     </header>
     <main>
       {% block content %}{% endblock %}

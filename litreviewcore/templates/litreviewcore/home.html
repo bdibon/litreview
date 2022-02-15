@@ -4,4 +4,14 @@
 
 <h1>HOME</h1>
 
+{% if user.is_authenticated %}
+
+    <p>Welcome {{ user.username }}!</p>
+
+{% else %}
+
+    <p>You are not logged in kek.</p>
+    
+{% endif %}
+
 {% endblock %}
