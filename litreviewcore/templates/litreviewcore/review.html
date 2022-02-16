@@ -1,0 +1,70 @@
+<div class="row justify-content-center my-3">
+    <div class="col-10 col-lg-8 border rounded pt-3">
+        <div class="row">
+            <p class="col-6">
+                <span class="badge {% if user_is_author %} bg-info {% else %} bg-primary {% endif %}">
+
+                    {% if user_is_author %}
+
+                        Vous
+
+                    {% else %}
+
+                        {{ review.user }}
+
+                    {% endif %}
+
+                </span> {% if user_is_author %} avez {% else %} a {% endif %} publié une critique
+            </p>
+            <p class="col-6 text-end text-secondary fs-6 fw-light fst-italic">
+                <span>{{ review.time_created }}</span>
+            </p>
+        </div>
+
+        <div class="row">
+            <h2 class="h4">
+                {% load post_extras %}
+                {{ review.headline }} - {% get_stars review.rating %}
+            </h2>
+        </div>
+
+        <div class="row">
+            <p>{{ review.body }}</p>
+        </div>
+
+        {% if review.ticket %}
+
+            <div class="row p-3">
+                <div class="container">
+                    <div class="row bg-light py-2 rounded">
+                        <div class="col-12">
+                           <p><span class="h5">Ticket</span> <span class="badge bg-secondary">{{ review.ticket.user }}</span></p>
+                        </div>
+                        <div class="col-12">
+                            <h3 class="h6">{{ review.ticket.title }}</h3>
+                        </div>
+
+                        {% if review.ticket.description %}
+
+                            <div class="col-12">
+                                <p>{{ review.ticket.description }}</p>
+                            </div>
+
+                        {% endif %}
+
+                        {% if review.ticket.image %}
+
+                            <div class="col-12">
+                                <img src="{{ review.ticket.image.url }}" alt="Couverture du livre" width="150px">
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+    </div>
+</div>

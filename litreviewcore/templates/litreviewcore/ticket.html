@@ -1,0 +1,47 @@
+<div class="row justify-content-center my-3">
+    <div class="col-10 col-lg-8 border rounded pt-3">
+        <div class="row">
+            <p class="col-6">
+                <span class="badge {% if user_is_author %} bg-info {% else %} bg-primary {% endif %}">
+
+                    {% if user_is_author %}
+
+                        Vous
+
+                    {% else %}
+
+                        {{ ticket.user }}
+
+                    {% endif %}
+
+                </span> {% if user_is_author %} avez {% else %} a {% endif %} demandé une critique
+            </p>
+            <p class="col-6 text-end text-secondary fs-6 fw-light fst-italic">
+                <span>{{ ticket.time_created }}</span>
+            </p>
+        </div>
+
+        <div class="row">
+            <h2 class="h4">{{ ticket.title }}</h2>
+        </div>
+
+         {% if ticket.description %}
+
+             <div class="row">
+                 <p>{{ ticket.description }}</p>
+             </div>
+
+         {% endif %}
+
+         {% if ticket.image %}
+
+             <div class="row">
+                 <div class="col-12 mb-4">
+                     <img src="{{ ticket.image.url }}" alt="Couverture du livre" width="150px">
+                 </div>
+             </div>
+
+         {% endif %}
+
+    </div>
+</div>
