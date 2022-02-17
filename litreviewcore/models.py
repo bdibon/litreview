@@ -19,9 +19,7 @@ class Review(models.Model):
     MAX_RATING = 5
     MIN_RATING = 0
 
-    ticket = models.ForeignKey(
-        Ticket, null=True, blank=True, on_delete=models.CASCADE
-    )
+    ticket = models.ForeignKey(Ticket, blank=True, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(
         # validates that rating must be between 0 and 5
         validators=[
@@ -31,7 +29,7 @@ class Review(models.Model):
     )
     headline = models.CharField(max_length=128)
     body = models.CharField(max_length=8192, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, blank=True, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
 
 
