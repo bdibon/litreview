@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row justify-content-center g-3">
+        
+        {% if ticket %}
+
+            <div class="col-10 col-lg-8">
+                <p>Vous êtes entrain de poster votre réponse à</p>
+
+                <div class="container bg-light rounded p-3">
+                    <div class="row">
+                        <p class="col-6">
+                            <span class="badge {% if user_is_author %} bg-info {% else %} bg-primary {% endif %}">
+                                {% if user_is_author %}
+                                    Vous
+                                {% else %}
+                                    {{ ticket.user }}
+                                {% endif %}
+                            </span> {% if user_is_author %} avez {% else %} a {% endif %} demandé une critique
+                        </p>
+                        <p class="col-6 text-end text-secondary fs-6 fw-light fst-italic">
+                            <span>{{ ticket.time_created }}</span>
+                        </p>
+                    </div>
+                    <div class="row">
+                        <h2 class="h4">{{ ticket.title }}</h2>
+                    </div>
+
+                        {% if ticket.description %}
+
+                            <div class="row">
+                                <p>{{ ticket.description }}</p>
+                            </div>
+
+                        {% endif %}
+
+                        {% if ticket.image %}
+
+                            <div class="row">
+                                <div class="col-12 mb-4">
+                                    <img src="{{ ticket.image.url }}" alt="Couverture du livre" width="120px">
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                </div>
+            </div>
+
+        {% endif %}
+
+        <div class="col-10 col-lg-8">
+            <form action="{% url 'core:new-review' %}{% if ticket %}?ticket={{ ticket.id }}{% endif %}" method="POST" enctype="multipart/form-data" class="row">
+
+                {% csrf_token %}
+
+                {% if not ticket %}
+
+                    <h3 class="h4">Livre / Article</h3>
+
+                    <div class="col-12 mb-3">
+                        <div class="col-12 mb-3">
+                            <label for="{{ ticket_form.title.id_for_label }}">{{ ticket_form.title.label }}</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="{{ ticket_form.title.id_for_label }}"
+                              name="{{ ticket_form.title.html_name }}"
+                              placeholder="{{ ticket_form.title.label }}"
+                              aria-label="{{ ticket_form.title.label }}"
+                              {% if ticket_form.title.value %} value="{{ ticket_form.title.value }}" {% endif %}
+                              required
+                            />
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="{{ ticket_form.description.id_for_label }}" class="form-label">{{ ticket_form.description.label }}</label>
+                            <textarea
+                              class="form-control"
+                              id="{{ ticket_form.description.id_for_label }}"
+                              name="{{ ticket_form.description.html_name }}"
+                              placeholder="{{ ticket_form.description.label }}"
+                              aria-label="{{ ticket_form.description.label }}"
+                            ></textarea>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="{{ ticket_form.image.id_for_label }}"></label>
+                            <input 
+                              type="file"
+                              name="{{ ticket_form.image.html_name }}"
+                              id="{{ ticket_form.image.id_for_label }}"
+                              accept="image/png, image/jpeg">
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <h3 class="h4">Critique</h3>
+
+                <div class="col-12 mb-3">
+                    <label for="{{ review_form.headline.id_for_label }}" class="form-label">{{ review_form.headline.label }}</label>
+                    <input
+                        type="text"
+                        maxlength="{{ review_form.headline.field.max_length }}"
+                        class="form-control {% if review_form.headline.errors %} is-invalid {% endif %}"
+                        id="{{ review_form.headline.id_for_label }}"
+                        name="{{ review_form.headline.html_name }}"
+                        placeholder="{{ review_form.headline.label }}"
+                        aria-label="{{ review_form.headline.label }}"
+                        aria-describedby="{{ review_form.headline.id_for_label }}_errors"
+                        {% if review_form.headline.value %} value="{{ review_form.headline.value }}" {% endif %}
+                        required
+                    />
+                    <div id="{{ review_form.headline.id_for_label }}_errors" class="invalid-feedback">
+
+                        {% for error in review_form.headline.errors %}
+
+                            <p>{{ error }}</p>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="col-12-mb-3">
+                    <label for="{{ review_form.rating.id_for_label }}" class="form-label">{{ review_form.rating.label }}</label>
+                    <input
+                        class="form-range"
+                        type="range"
+                        min="{{ review_form.rating.field.min_value }}"
+                        max="{{ review_form.rating.field.max_value }}"
+                        step="1"
+                        id="{{ review_form.rating.id_for_label }}"
+                        name="{{ review_form.rating.html_name }}"
+                        aria-label="{{ review_form.rating.label }}"
+                    />
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="{{ review_form.body.id_for_label }}" class="form-label">{{ review_form.body.label }}</label>
+                    <textarea
+                        class="form-control {% if review_form.body.errors %} is-invalid {% endif %}"
+                        id="{{ review_form.body.id_for_label }}"
+                        name="{{ review_form.body.html_name }}"
+                        aria-label="{{ review_form.body.label }}"
+                        aria-describedby="{{ review_form.body.id_for_label }}_errors"
+                    ></textarea>
+                    <div id="{{ review_form.body.id_for_label }}_errors" class="invalid-feedback">
+
+                        {% for error in review_form.body.errors %}
+
+                            <p>{{ error }}</p>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="col-12 mb-3 text-center text-sm-end">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
