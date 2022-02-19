@@ -10,10 +10,10 @@
         <div class="col-10 col-lg-8">
             <div class="row gy-2">
                 <div class="col-lg-6 text-center">
-                    <a href="{% url 'core:new-ticket' %}" class="btn btn-dark d-block">Demander une critique</a>
+                    <a href="{% url 'core:new-ticket' %}" class="btn btn-outline-dark d-block">Demander une critique</a>
                 </div>
                 <div class="col-lg-6 text-center">
-                    <a href="{% url 'core:new-review' %}" class="btn btn-dark d-block">Créer une critique</a>
+                    <a href="{% url 'core:new-review' %}" class="btn btn-outline-dark d-block">Créer une critique</a>
                 </div>
             </div>
         </div>
@@ -32,6 +32,39 @@
         {% endif %}
 
     {% endfor %}
+
+    <div class="row pagination">
+        <div class="col-12 text-center">
+            <span class="step-links">
+
+                {% if page_obj.has_previous %}
+                
+                    <span class="prev">
+                        <a href="?page=1">&laquo; première</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">page précédente</a>
+                        &nbsp;&verbar;&nbsp;
+                    </span>
+
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+
+                    <span class="next">
+                        &nbsp;&verbar;&nbsp;
+                        <a href="?page={{ page_obj.next_page_number }}">page suivante</a>
+                    </span>
+
+                    <a href="?page={{ page_obj.paginator.num_pages }}">dernière &raquo;</a>
+
+                {% endif %}
+
+            </span>
+        </div>
+    </div>
 
 </div>
 

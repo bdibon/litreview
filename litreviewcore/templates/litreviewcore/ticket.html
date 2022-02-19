@@ -33,17 +33,53 @@
 
          {% endif %}
 
-         <div class="row justify-content-end">
-             <div class="col-4">
-                 <a href="{% url 'core:new-review'  %}?ticket={{ ticket.id }}" class="btn btn-light border my-2">Créer une critique</a>
-             </div>
-         </div>
+        <div class="row justify-content-end">
+
+            {% if is_delete_post %}
+
+                <div class="col-12 col-sm-4">
+                    <form action="{% url 'core:delete-ticket' ticket.id %}" method="POST" class="text-center text-md-end">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger my-2">Supprimer</button>
+                    </form>
+                </div>
+
+            {% elif not is_user_posts %}
+
+                <div class="col-4">
+
+                    {% if ticket.review_set.count == 0 %}
+
+                        <a href="{% url 'core:new-review' %}?ticket={{ ticket.id }}" class="btn btn-outline-dark my-2">Créer une critique</a>
+
+                    {% else %}
+
+                        <a class="btn btn-outline-dark my-2 disabled" aria-disabled="true">Créer une critique</a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
 
          {% if ticket.image %}
 
              <div class="row">
                  <div class="col-12 mb-4">
                      <img src="{{ ticket.image.url }}" alt="Couverture du livre" width="150px">
+                 </div>
+             </div>
+
+         {% endif %}
+
+         {% if is_user_posts %}
+
+             <div class="row justify-content-end">
+                 <div class="col--md-6 text-md-end text-center">
+                     <a href="{% url "core:edit-ticket" ticket.id %}" class="btn btn-outline-dark my-4 mx-2">Modifier</a>
+                     <a href="{% url "core:delete-ticket" ticket.id %}" class="btn btn-outline-dark my-4 mx-2">Supprimer</a>
                  </div>
              </div>
 

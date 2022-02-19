@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row justify-content-center my-5">
+        <div class="col-10 col-lg-8">
+            <h2 class="h4 text-center mb-4">Modifier votre critique</h2>
+        </div>
+        <div class="col-10 col-lg-8">
+            <form action="{% url "core:edit-review" review.id %}" method="POST" class="row">
+                {% csrf_token %}
+                <div class="col-12 mb-3">
+                    <label for="{{ form.headline.id_for_label }}" class="form-label">{{ form.headline.label }}</label>
+                    <input
+                        type="text"
+                        maxlength="{{ form.headline.field.max_length }}"
+                        class="form-control {% if form.headline.errors %} is-invalid {% endif %}"
+                        id="{{ form.headline.id_for_label }}"
+                        name="{{ form.headline.html_name }}"
+                        placeholder="{{ form.headline.label }}"
+                        aria-label="{{ form.headline.label }}"
+                        aria-describedby="{{ form.headline.id_for_label }}_errors"
+                        {% if form.headline.value %} value="{{ form.headline.value }}" {% endif %}
+                        required
+                    />
+                    <div id="{{ form.headline.id_for_label }}_errors" class="invalid-feedback">
+
+                        {% for error in form.headline.errors %}
+
+                            <p>{{ error }}</p>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="col-12-mb-3">
+                    <label for="{{ form.rating.id_for_label }}" class="form-label">{{ form.rating.label }}</label>
+                    <input
+                        class="form-range"
+                        type="range"
+                        min="{{ form.rating.field.min_value }}"
+                        max="{{ form.rating.field.max_value }}"
+                        step="1"
+                        id="{{ form.rating.id_for_label }}"
+                        name="{{ form.rating.html_name }}"
+                        aria-label="{{ form.rating.label }}"
+                        {% if form.rating.value %} value="{{ form.rating.value }}" {% endif %}
+                    />
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="{{ form.body.id_for_label }}" class="form-label">{{ form.body.label }}</label>
+                    <textarea
+                        class="form-control {% if form.body.errors %} is-invalid {% endif %}"
+                        id="{{ form.body.id_for_label }}"
+                        name="{{ form.body.html_name }}"
+                        aria-label="{{ form.body.label }}"
+                        aria-describedby="{{ form.body.id_for_label }}_errors"
+                    >{% if form.body.value %}{{ form.body.value }}{% endif %}</textarea>
+                    <div id="{{ form.body.id_for_label }}_errors" class="invalid-feedback">
+
+                        {% for error in form.body.errors %}
+
+                            <p>{{ error }}</p>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="col-12 mb-3 text-center text-sm-end">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

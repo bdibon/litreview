@@ -32,13 +32,44 @@
             <p>{{ review.body }}</p>
         </div>
 
+        {% if is_user_posts %}
+
+             <div class="row justify-content-end">
+                 <div class="col--md-6 text-md-end text-center">
+                     <a href="{% url "core:edit-review" review.id %}" class="btn btn-outline-dark my-4 mx-2">Modifier</a>
+                     <a href="{% url "core:delete-review" review.id %}" class="btn btn-outline-dark my-4 mx-2">Supprimer</a>
+                 </div>
+             </div>
+
+         {% endif %}
+
+        {% comment %}
+            This if branch does not really matter as per now every review has to have a ticket.
+            Some dummy data that was created at the beginning of the project does not enforce this principle (as the model does not),
+            so it does not harm to leave it there.
+        {% endcomment %}
         {% if review.ticket %}
 
             <div class="row p-3">
                 <div class="container">
                     <div class="row bg-light py-2 rounded">
                         <div class="col-12">
-                           <p><span class="h5">Ticket</span> <span class="badge bg-secondary">{{ review.ticket.user }}</span></p>
+                           <p>
+                                <span class="h5">Ticket</span>
+                                <span class="badge bg-secondary">
+
+                                    {% if review.ticket.user == user %}
+
+                                        Vous
+
+                                    {% else %}
+
+                                        {{ review.ticket.user }}
+
+                                    {% endif %}
+                                    
+                                </span>
+                            </p>
                         </div>
                         <div class="col-12">
                             <h3 class="h6">{{ review.ticket.title }}</h3>
@@ -62,6 +93,18 @@
 
                     </div>
                 </div>
+            </div>
+
+        {% endif %}
+
+        
+        {% if is_delete_post %}
+
+            <div class="col-12">
+                <form action="{% url 'core:delete-review' review.id %}" method="POST" class="text-center text-md-end">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger my-2">Supprimer</button>
+                </form>
             </div>
 
         {% endif %}

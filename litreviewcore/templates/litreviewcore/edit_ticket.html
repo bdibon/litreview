@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row justify-content-center my-4">
+        <div class="col-10 col-lg-8">
+            <h2 class="h4 text-center mb-4">Modifier votre ticket</h2>
+        </div>
+        <div class="col-10 col-lg-8">
+            <form action="{% url 'core:edit-ticket' ticket.id %}" method="POST" enctype="multipart/form-data" class="row">
+                {% csrf_token %}
+                <div class="col-12 mb-3">
+                    <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="{{ form.title.id_for_label }}"
+                      name="{{ form.title.html_name }}"
+                      placeholder="{{ form.title.label }}"
+                      aria-label="{{ form.title.label }}"
+                      {% if form.title.value %} value="{{ form.title.value }}" {% endif %}
+                      required
+                    />
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                    <textarea
+                      class="form-control"
+                      id="{{ form.description.id_for_label }}"
+                      name="{{ form.description.html_name }}"
+                      placeholder="{{ form.description.label }}"
+                      aria-label="{{ form.description.label }}"
+                    >{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                </div>
+
+                {% if ticket.image %}
+
+                    <div class="col-12 mb-3">
+                        <img src="{{ ticket.image.url}}" alt="Couverture du livre" width="150px">
+                    </div>
+
+                {% endif %}
+
+                <div class="col-12 mb-3">
+                    <label for="{{ form.image.id_for_label }}"></label>
+                    <input 
+                      type="file"
+                      name="{{ form.image.html_name }}"
+                      id="{{ form.image.id_for_label }}"
+                      accept="image/png, image/jpeg"
+                    />
+                </div>
+                <div class="col-12 mb-3 text-center text-sm-end">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock%}

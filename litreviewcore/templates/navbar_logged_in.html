@@ -14,11 +14,50 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-          <a class="nav-link" href="#">Features</a>
-          <a class="nav-link" href="{% url 'logout' %}">Se déconnecter</a>
+
+          {% url 'core:home' as home_url %}
+          {% url 'core:user-posts' as user_posts_url %}
+          {% url 'logout' as logout_url %}
+
+          {% comment %} HOME {% endcomment %}
+
+          {% if request.path == home_url %}
+
+            <a class="nav-link active" aria-current="page" href="{% url "core:home" %}">Flux</a>
+
+          {% else %}
+
+            <a class="nav-link" href="{% url "core:home" %}">Flux</a>
+
+          {% endif %}
+
+          {% comment %} USER POSTS {% endcomment %}
+
+          {% if request.path == user_posts_url %}
+
+            <a class="nav-link active" aria-current="page" href="{% url "core:user-posts" %}">Posts</a>
+
+          {% else %}
+
+            <a class="nav-link" href="{% url "core:user-posts" %}">Posts</a>
+
+          {% endif %}
+
+          <a class="nav-link" href="#">Abonnements</a>
+
+          {% comment %} LOGOUT {% endcomment %}
+
+          {% if request.path == logout_url %}
+
+            <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Se déconnecter</a>
+
+          {% else %}
+
+            <a class="nav-link" href="{% url 'logout' %}">Se déconnecter</a>
+
+          {% endif %}
+
         </div>
       </div>
     </div>
   </nav>
-  

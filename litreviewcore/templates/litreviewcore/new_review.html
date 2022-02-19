@@ -100,12 +100,12 @@
                 <h3 class="h4">Critique</h3>
 
                 <div class="col-12 mb-3">
-                    <label for="{{ review_form.headline.id_for_label }}" class="form-label">{{ review_form.headline.label }}</label>
+                    <label for="{{ form.headline.id_for_label }}" class="form-label">{{ form.headline.label }}</label>
                     <input
                         type="text"
-                        maxlength="{{ review_form.headline.field.max_length }}"
-                        class="form-control {% if review_form.headline.errors %} is-invalid {% endif %}"
-                        id="{{ review_form.headline.id_for_label }}"
+                        maxlength="{{ form.headline.field.max_length }}"
+                        class="form-control {% if form.headline.errors %} is-invalid {% endif %}"
+                        id="{{ form.headline.id_for_label }}"
                         name="{{ review_form.headline.html_name }}"
                         placeholder="{{ review_form.headline.label }}"
                         aria-label="{{ review_form.headline.label }}"
@@ -124,30 +124,30 @@
                     </div>
                 </div>
                 <div class="col-12-mb-3">
-                    <label for="{{ review_form.rating.id_for_label }}" class="form-label">{{ review_form.rating.label }}</label>
+                    <label for="{{ form.rating.id_for_label }}" class="form-label">{{ form.rating.label }}</label>
                     <input
                         class="form-range"
                         type="range"
-                        min="{{ review_form.rating.field.min_value }}"
-                        max="{{ review_form.rating.field.max_value }}"
+                        min="{{ form.rating.field.min_value }}"
+                        max="{{ form.rating.field.max_value }}"
                         step="1"
-                        id="{{ review_form.rating.id_for_label }}"
-                        name="{{ review_form.rating.html_name }}"
-                        aria-label="{{ review_form.rating.label }}"
+                        id="{{ form.rating.id_for_label }}"
+                        name="{{ form.rating.html_name }}"
+                        aria-label="{{ form.rating.label }}"
                     />
                 </div>
                 <div class="col-12 mb-3">
-                    <label for="{{ review_form.body.id_for_label }}" class="form-label">{{ review_form.body.label }}</label>
+                    <label for="{{ form.body.id_for_label }}" class="form-label">{{ form.body.label }}</label>
                     <textarea
-                        class="form-control {% if review_form.body.errors %} is-invalid {% endif %}"
-                        id="{{ review_form.body.id_for_label }}"
-                        name="{{ review_form.body.html_name }}"
-                        aria-label="{{ review_form.body.label }}"
-                        aria-describedby="{{ review_form.body.id_for_label }}_errors"
+                        class="form-control {% if form.body.errors %} is-invalid {% endif %}"
+                        id="{{ form.body.id_for_label }}"
+                        name="{{ form.body.html_name }}"
+                        aria-label="{{ form.body.label }}"
+                        aria-describedby="{{ form.body.id_for_label }}_errors"
                     ></textarea>
-                    <div id="{{ review_form.body.id_for_label }}_errors" class="invalid-feedback">
+                    <div id="{{ form.body.id_for_label }}_errors" class="invalid-feedback">
 
-                        {% for error in review_form.body.errors %}
+                        {% for error in form.body.errors %}
 
                             <p>{{ error }}</p>
 

@@ -1,9 +1,14 @@
 from itertools import chain
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.views import generic
+from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator
+from django.http import HttpResponseForbidden
+from django.forms.models import model_to_dict
 
 from .forms import ReviewForm, UserCreationForm, TicketForm
 from .models import Review, Ticket, User
@@ -22,7 +27,11 @@ def home(request):
     reviews = Review.objects.filter(user__in=following).select_related(
         "user", "ticket"
     )
-    tickets = Ticket.objects.filter(user__in=following).select_related("user")
+    tickets = (
+        Ticket.objects.filter(user__in=following)
+        .select_related("user")
+        .prefetch_related("review_set")
+    )
 
     # Concatenate the results.
     posts = sorted(
@@ -31,7 +40,41 @@ def home(request):
         reverse=True,
     )
 
-    return render(request, "litreviewcore/home.html", {"posts": posts})
+    # Paginate the results.
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "litreviewcore/home.html",
+        {"posts": page_obj.object_list, "page_obj": page_obj},
+    )
+
+
+@method_decorator(login_required, name="dispatch")
+class UserPostsView(generic.ListView):
+    template_name = "litreviewcore/user_posts.html"
+    context_object_name = "posts"
+    paginate_by = 5
+
+    def get_queryset(self):
+        """Return the user's posts."""
+        current_user = self.request.user
+
+        reviews = Review.objects.filter(user=current_user).select_related(
+            "ticket"
+        )
+        tickets = Ticket.objects.filter(user=current_user).prefetch_related(
+            "review_set"
+        )
+        posts = sorted(
+            chain(reviews, tickets),
+            key=lambda post: post.time_created,
+            reverse=True,
+        )
+
+        return posts
 
 
 @login_required
@@ -43,12 +86,60 @@ def new_ticket(request):
             ticket = form.cleaned_data
             ticket["user"] = request.user
             Ticket(**ticket).save()
-            # TODO: redirect to the posts page, where all the user's publicaiton belong.
-            return redirect("core:home")
+            return redirect("core:user-posts")
     else:
         form = TicketForm()
 
     return render(request, "litreviewcore/new_ticket.html", {"form": form})
+
+
+@login_required
+def edit_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+
+    if ticket.user != request.user:
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        form = TicketForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            ticket_new_data = form.cleaned_data
+            ticket_new_data["user"] = request.user
+            ticket.title = ticket_new_data.get("title")
+            ticket.description = ticket_new_data.get("description")
+
+            new_image = ticket_new_data.get("image")
+            if new_image:
+                ticket.image = new_image
+
+            ticket.save()
+            return redirect("core:user-posts")
+    else:
+        data = model_to_dict(ticket, fields=TicketForm.Meta.fields)
+        form = TicketForm(data)
+
+    return render(
+        request,
+        "litreviewcore/edit_ticket.html",
+        {"ticket": ticket, "form": form},
+    )
+
+
+@login_required
+def delete_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+
+    if ticket.user != request.user:
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        ticket.delete()
+        return redirect("core:user-posts")
+
+    return render(
+        request, "litreviewcore/delete_ticket.html", {"ticket": ticket}
+    )
 
 
 @login_required
@@ -93,6 +184,44 @@ def new_review(request):
             "ticket_form": ticket_form,
             "user_is_author": user_is_author,
         },
+    )
+
+
+@login_required
+def edit_review(request, pk):
+    review = get_object_or_404(Review, pk=pk)
+
+    if review.user != request.user:
+        return HttpResponseForbidden()
+
+    form = ReviewForm(
+        request.POST or None,
+        instance=review,
+    )
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect("core:user-posts")
+
+    return render(
+        request,
+        "litreviewcore/edit_review.html",
+        {"review": review, "form": form},
+    )
+
+
+@login_required
+def delete_review(request, pk):
+    review = get_object_or_404(Review, pk=pk)
+
+    if review.user != request.user:
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        review.delete()
+        return redirect("core:user-posts")
+
+    return render(
+        request, "litreviewcore/delete_review.html", {"review": review}
     )
 
 

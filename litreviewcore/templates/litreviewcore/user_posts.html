@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% load post_extras %}
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <h2 class="h4 text-center">Vos posts</h2>
+        </div>
+
+        {% for post in posts %}
+
+            {% if post|is_review %}
+
+                {% show_review post user True %}
+
+            {% else %}
+
+                {% show_ticket post user True %}
+
+            {% endif %}
+
+        {% endfor %}
+
+        <div class="row pagination">
+            <div class="col-12 text-center">
+                <span class="step-links">
+
+                    {% if page_obj.has_previous %}
+                    
+                        <span class="prev">
+                            <a href="?page=1">&laquo; première</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">page précédente</a>
+                            &nbsp;&verbar;&nbsp;
+                        </span>
+
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+
+                        <span class="next">
+                            &nbsp;&verbar;&nbsp;
+                            <a href="?page={{ page_obj.next_page_number }}">page suivante</a>
+                        </span>
+
+                        <a href="?page={{ page_obj.paginator.num_pages }}">dernière &raquo;</a>
+
+                    {% endif %}
+
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock%}
