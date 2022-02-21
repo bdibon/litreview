@@ -7,11 +7,11 @@ from django.db.models import Q
 from django.views import generic
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.forms.models import model_to_dict
 
 from .forms import ReviewForm, UserCreationForm, TicketForm
-from .models import Review, Ticket, User
+from .models import Review, Ticket, User, UserFollows
 
 
 @login_required
@@ -223,6 +223,48 @@ def delete_review(request, pk):
     return render(
         request, "litreviewcore/delete_review.html", {"review": review}
     )
+
+
+@login_required
+def index_follows(request):
+    user = request.user
+
+    followings = UserFollows.objects.filter(user=user).select_related(
+        "followed_user"
+    )
+    followers = UserFollows.objects.filter(followed_user=user).select_related(
+        "user"
+    )
+
+    return render(
+        request,
+        "litreviewcore/user_follows.html",
+        {"followings": followings, "followers": followers},
+    )
+
+
+@login_required
+def subscribe(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest()
+
+    followed_user_username = request.POST.get("username")
+    followed_user = get_object_or_404(User, username=followed_user_username)
+    user_follows = UserFollows(user=request.user, followed_user=followed_user)
+    user_follows.save()
+    return redirect("core:user-follows")
+
+
+@login_required
+def unsubscribe(request, pk):
+    user_follows = get_object_or_404(UserFollows, pk=pk)
+
+    if user_follows.user == request.user:
+        user_follows.delete()
+    else:
+        return HttpResponseForbidden()
+
+    return redirect("core:user-follows")
 
 
 def signup(request):
