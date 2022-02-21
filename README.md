@@ -2,7 +2,7 @@
 
 This project is a web application developped with the [Django web framework](https://www.djangoproject.com/) and [bootstrap5](https://getbootstrap.com/). It is a book review social platform.
 
-Users of the app can create tickets to ask for a specific book review, they can post review in reply to someone else's ticket, and they can have follow one another.
+Users of the app can create tickets to ask for a specific book review, they can post review in reply to someone else's ticket, and they can follow one another.
 
 The app has 4 sections:
 
