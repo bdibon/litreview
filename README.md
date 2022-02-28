@@ -28,7 +28,7 @@ $ pip install --user pipenv
 From the project's root directory, install the project's dependencies.
 
 ```
-$ pipenv install
+$ pipenv install --dev
 ```
 
 Finally, activate the virtual environment and start the server.
