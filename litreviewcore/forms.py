@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms import IntegerField, ModelForm
-from django.forms.widgets import NumberInput
 
 from .models import Review, Ticket, User
 
@@ -37,9 +36,3 @@ class ReviewForm(ModelForm):
         model = Review
         fields = ["ticket", "headline", "rating", "body", "user"]
         labels = {"headline": "Titre", "rating": "Note", "body": "Commentaire"}
-
-    def clean_user(self):
-        return self.instance.user if self.instance else None
-
-    def clean_ticket(self):
-        return self.instance.ticket if self.instance else None

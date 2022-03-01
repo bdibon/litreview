@@ -196,10 +196,14 @@ def edit_review(request, pk):
 
     form = ReviewForm(
         request.POST or None,
-        instance=review,
+        initial=model_to_dict(review),
     )
     if request.method == "POST" and form.is_valid():
-        form.save()
+        review.headline = form.cleaned_data["headline"]
+        review.body = form.cleaned_data["body"]
+        review.rating = form.cleaned_data["rating"]
+        review.save()
+
         return redirect("core:user-posts")
 
     return render(
